@@ -7,7 +7,12 @@ easy_admin:
                 title: "Product list"
                 fields:
                     - { property: 'name' }
-                    - { property: 'image', type: 'image' }
+                    - { property: 'image', type: 'image', base_path: '%app.path.product_images%' }
+            form:
+                fields:
+                    - { property: 'name'}
+                    - { property: 'description'}
+                    - { property: 'imageFile', type: 'vich_image'}
 
         Offer:
             class: App\Entity\Offer
