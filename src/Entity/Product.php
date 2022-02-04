@@ -8,6 +8,8 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Any offered product or service. For example: a pair of shoes; a concert ticket; the rental of a car; a haircut; or an episode of a TV show streamed online.
@@ -15,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see http://schema.org/Product Documentation on Schema.org
  *
  * @ORM\Entity
+ * @Vich\Uploadable()
  * @ApiResource(iri="http://schema.org/Product")
  */
 class Product
@@ -54,6 +57,23 @@ class Product
      */
     private $image;
 
+    /**
+     * @Vich\UploadableField(mapping="product_images", fileNameProperty="image")
+     * @var File
+     */
+    private $imageFile;
+
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private \DateTime $updatedAt;
+
+    public function __construct()
+    {
+        $this->updatedAt = new \DateTime('now');
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,5 +107,18 @@ class Product
     public function getImage(): ?string
     {
         return $this->image;
+    }
+
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(File $imageFile = null)
+    {
+        $this->imageFile = $imageFile;
+        if ($imageFile) {
+            $this->updatedAt = new \DateTime('now');
+        }
     }
 }
